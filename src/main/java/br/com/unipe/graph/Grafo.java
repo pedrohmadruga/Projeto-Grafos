@@ -105,6 +105,10 @@ public class Grafo {
         return v1.getNome().equals(v2.getNome());
     }
 
+    public List<Vertice> getVertices() {
+        return Collections.unmodifiableList(vertices);
+    }
+
     public Optional<Vertice> encontraVertice(String nome) {
         for (Vertice vertice : vertices) {
             if (vertice.getNome().equalsIgnoreCase(nome)) {
