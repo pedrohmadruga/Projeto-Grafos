@@ -42,5 +42,47 @@ public class LinkedInAnalyzer {
                         LinkedHashMap::new
                 ));
     }
+
+    public List<List<String>> mapearGruposIsolados() {
+        ErrorHandler.exigeNaoNulo(grafo, AnalysisException.Type.GRAFO_NULO);
+        
+        List<Vertice> todosVertices = grafo.getVertices();
+        Set<Vertice> visitados = new HashSet<>();
+        List<List<String>> gruposIsolados = new ArrayList<>();
+        
+        for (Vertice vertice : todosVertices) {
+            if (visitados.contains(vertice)) {
+                continue;
+            }
+            
+            //DFS para encontrar todos os vertices conectados
+            List<String> caminhoCompleto = grafo.dfsIterativo(vertice.getNome(), null);
+            
+            //converter para vertices
+            List<Vertice> componenteConexo = caminhoCompleto.stream()
+                    .map(nome -> grafo.encontraVertice(nome)
+                            .orElseThrow(() -> new AnalysisException(
+                                    AnalysisException.Type.PESSOA_NAO_ENCONTRADA,
+                                    "Pessoa '" + nome + "' não encontrada ao mapear grupos")))
+                    .toList();
+            
+            //marcar como visitados
+            visitados.addAll(componenteConexo);
+            
+            //ordenar alfabeticamente e adicionar ao resultado
+            List<String> nomesDoBrupo = componenteConexo.stream()
+                    .map(Vertice::getNome)
+                    .sorted()
+                    .toList();
+            
+            gruposIsolados.add(nomesDoBrupo);
+        }
+        
+        //ordenar grupos do maior para o menor
+        return gruposIsolados.stream()
+                .sorted((grupo1, grupo2) -> Integer.compare(grupo2.size(), grupo1.size()))
+                .toList();
+    }
 }
+
  
