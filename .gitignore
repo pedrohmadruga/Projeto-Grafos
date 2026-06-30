@@ -3,6 +3,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+.cursor/
 .kotlin
 
 ### IntelliJ IDEA ###
@@ -41,3 +42,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Instruções do projeto ###
+projeto_final_linkedin.md
