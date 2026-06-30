@@ -1,6 +1,8 @@
-package br.com.unipe;
+package br.com.unipe.graph;
 
-import javax.swing.*;
+import br.com.unipe.model.Aresta;
+import br.com.unipe.model.Vertice;
+
 import java.util.*;
 
 public class Grafo {

@@ -1,5 +1,6 @@
-package br.com.unipe;
+package br.com.unipe.app;
 
+import br.com.unipe.graph.Grafo;
 
 public class Main {
     public static void main(String[] args) {

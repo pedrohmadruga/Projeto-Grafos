@@ -1,4 +1,4 @@
-package br.com.unipe;
+package br.com.unipe.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
