@@ -3,9 +3,9 @@ package br.com.unipe.exception;
 public class AnalysisException extends RuntimeException {
 
     public enum Type {
-        NULL_GRAPH("Graph cannot be null."),
-        PERSON_NOT_FOUND("Person not found in the network."),
-        INVALID_ARGUMENT("Invalid argument.");
+        GRAFO_NULO("O grafo não pode ser nulo."),
+        PESSOA_NAO_ENCONTRADA("Pessoa não encontrada na rede."),
+        ARGUMENTO_INVALIDO("Argumento inválido.");
 
         private final String defaultMessage;
 

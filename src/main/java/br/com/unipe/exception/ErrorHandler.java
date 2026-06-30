@@ -7,18 +7,18 @@ public final class ErrorHandler {
     private ErrorHandler() {
     }
 
-    public static void requireNonNull(Object value, AnalysisException.Type type) {
-        if (isNotEmpty(value)) {
+    public static void exigeNaoNulo(Object valor, AnalysisException.Type tipo) {
+        if (naoEstaVazio(valor)) {
             return;
         }
-        throw new AnalysisException(type);
+        throw new AnalysisException(tipo);
     }
 
-    private static boolean isNotEmpty(Object value) {
-        return value != null;
+    private static boolean naoEstaVazio(Object valor) {
+        return valor != null;
     }
 
-    public static <T> T requirePresent(Optional<T> optional, AnalysisException.Type type) {
-        return optional.orElseThrow(() -> new AnalysisException(type));
+    public static <T> T exigePresente(Optional<T> optional, AnalysisException.Type tipo) {
+        return optional.orElseThrow(() -> new AnalysisException(tipo));
     }
 }

@@ -13,13 +13,13 @@ public class LinkedInAnalyzer {
     private final Grafo grafo;
 
     public LinkedInAnalyzer(Grafo grafo) {
-        ErrorHandler.requireNonNull(grafo, AnalysisException.Type.NULL_GRAPH);
+        ErrorHandler.exigeNaoNulo(grafo, AnalysisException.Type.GRAFO_NULO);
         this.grafo = grafo;
     }
 
     public Map<String, Integer> sugereConexoes(String nome) {
-        Vertice usuario = ErrorHandler.requirePresent(
-                grafo.encontraVertice(nome), AnalysisException.Type.PERSON_NOT_FOUND);
+        Vertice usuario = ErrorHandler.exigePresente(
+                grafo.encontraVertice(nome), AnalysisException.Type.PESSOA_NAO_ENCONTRADA);
 
         List<Vertice> primeiroGrau = usuario.getAdjacencias();
         Map<String, Integer> amigosEmComum = new HashMap<>();
