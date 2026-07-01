@@ -3,6 +3,7 @@ package br.com.unipe.analyzer;
 import br.com.unipe.exception.AnalysisException;
 import br.com.unipe.exception.ErrorHandler;
 import br.com.unipe.graph.Grafo;
+import br.com.unipe.graph.ResultadoCaminho;
 import br.com.unipe.model.Vertice;
 
 import java.util.*;
@@ -41,6 +42,15 @@ public class LinkedInAnalyzer {
                         (e1, e2) -> e1,
                         LinkedHashMap::new
                 ));
+    }
+
+    public ResultadoCaminho rotaMaiorAfinidade(String origem, String destino) {
+        ErrorHandler.exigePresente(
+                grafo.encontraVertice(origem), AnalysisException.Type.PESSOA_NAO_ENCONTRADA);
+        ErrorHandler.exigePresente(
+                grafo.encontraVertice(destino), AnalysisException.Type.PESSOA_NAO_ENCONTRADA);
+
+        return grafo.dijkstra(origem, destino);
     }
 
     public List<List<String>> mapearGruposIsolados() {

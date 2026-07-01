@@ -396,6 +396,67 @@ public class Grafo {
     }
 
 
+    public ResultadoCaminho dijkstra(String origem, String destino) {
+        Vertice verticeOrigem = encontraVertice(origem).orElseThrow(
+                () -> new IllegalArgumentException("Vertice " + origem + " não encontrado."));
+        Vertice verticeDestino = encontraVertice(destino).orElseThrow(
+                () -> new IllegalArgumentException("Vertice " + destino + " não encontrado."));
+
+        Map<Vertice, Integer> dist = new HashMap<>();
+        Map<Vertice, Vertice> anterior = new HashMap<>();
+        for (Vertice v : vertices) {
+            dist.put(v, Integer.MAX_VALUE);
+        }
+        dist.put(verticeOrigem, 0);
+
+        Set<Vertice> finalizados = new HashSet<>();
+        PriorityQueue<Vertice> fila = new PriorityQueue<>(Comparator.comparingInt(dist::get));
+        fila.add(verticeOrigem);
+
+        while (!fila.isEmpty()) {
+            Vertice atual = fila.poll();
+            if (!finalizados.add(atual)) {
+                continue;
+            }
+            if (atual.equals(verticeDestino)) {
+                break;
+            }
+            for (Vertice vizinho : atual.getAdjacencias()) {
+                if (finalizados.contains(vizinho)) {
+                    continue;
+                }
+                int novaDist = dist.get(atual) + obtemMenorPeso(atual, vizinho);
+                if (novaDist < dist.get(vizinho)) {
+                    dist.put(vizinho, novaDist);
+                    anterior.put(vizinho, atual);
+                    fila.add(vizinho);
+                }
+            }
+        }
+
+        if (dist.get(verticeDestino) == Integer.MAX_VALUE) {
+            return new ResultadoCaminho(List.of(), -1); // destino inalcançável
+        }
+
+        return new ResultadoCaminho(reconstroiCaminho(anterior, verticeDestino), dist.get(verticeDestino));
+    }
+
+    private int obtemMenorPeso(Vertice atual, Vertice vizinho) {
+        return obtemArestasParaVizinho(atual, vizinho).stream()
+                .map(Aresta::getPeso)
+                .filter(Objects::nonNull)
+                .min(Integer::compareTo)
+                .orElse(0);
+    }
+
+    private List<String> reconstroiCaminho(Map<Vertice, Vertice> anterior, Vertice destino) {
+        LinkedList<String> caminho = new LinkedList<>();
+        for (Vertice atual = destino; atual != null; atual = anterior.get(atual)) {
+            caminho.addFirst(atual.getNome());
+        }
+        return caminho;
+    }
+
     private List<Aresta> obtemArestasParaVizinho(Vertice atual, Vertice vizinho) {
         return arestas.stream()
                 .filter(a -> (a.getVerticeOrigem().equals(atual) && a.getVerticeDestino().equals(vizinho)) ||
