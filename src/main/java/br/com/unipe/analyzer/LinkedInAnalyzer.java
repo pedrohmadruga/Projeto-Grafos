@@ -44,6 +44,15 @@ public class LinkedInAnalyzer {
                 ));
     }
 
+    public int grauSeparacao(String origem, String destino) {
+        ErrorHandler.exigePresente(
+                grafo.encontraVertice(origem), AnalysisException.Type.PESSOA_NAO_ENCONTRADA);
+        ErrorHandler.exigePresente(
+                grafo.encontraVertice(destino), AnalysisException.Type.PESSOA_NAO_ENCONTRADA);
+
+        return grafo.bfs(origem, destino);
+    }
+
     public ResultadoCaminho rotaMaiorAfinidade(String origem, String destino) {
         ErrorHandler.exigePresente(
                 grafo.encontraVertice(origem), AnalysisException.Type.PESSOA_NAO_ENCONTRADA);
@@ -65,8 +74,7 @@ public class LinkedInAnalyzer {
                 continue;
             }
             
-            //DFS para encontrar todos os vertices conectados
-            List<String> caminhoCompleto = grafo.dfsIterativo(vertice.getNome(), null);
+            List<String> caminhoCompleto = grafo.dfsComponente(vertice.getNome());
             
             //converter para vertices
             List<Vertice> componenteConexo = caminhoCompleto.stream()
@@ -80,12 +88,12 @@ public class LinkedInAnalyzer {
             visitados.addAll(componenteConexo);
             
             //ordenar alfabeticamente e adicionar ao resultado
-            List<String> nomesDoBrupo = componenteConexo.stream()
+            List<String> nomesDoGrupo = componenteConexo.stream()
                     .map(Vertice::getNome)
                     .sorted()
                     .toList();
             
-            gruposIsolados.add(nomesDoBrupo);
+            gruposIsolados.add(nomesDoGrupo);
         }
         
         //ordenar grupos do maior para o menor

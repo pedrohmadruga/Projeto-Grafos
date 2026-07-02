@@ -213,6 +213,14 @@ public class Grafo {
     }
 
     public List<String> dfsIterativo(String origem, String destino) {
+        return dfsIterativo(origem, destino, true);
+    }
+
+    public List<String> dfsComponente(String origem) {
+        return dfsIterativo(origem, null, false);
+    }
+
+    private List<String> dfsIterativo(String origem, String destino, boolean verbose) {
         Vertice verticeOrigem = encontraVertice(origem).orElseThrow(
                 () -> new IllegalArgumentException("Vertice " + origem + " não encontrado."));
         Vertice verticeDestino = destino == null ? null
@@ -239,21 +247,57 @@ public class Grafo {
             List<Vertice> adjacenciasOrdenadas = adjacencias.stream().sorted(Comparator.comparing(Vertice::getNome))
                     .toList();
 
-            // Pegue a primeira adjacência não visitada
             Optional<Vertice> proximo = adjacenciasOrdenadas.stream().filter(a -> !visitados.contains(a)).findFirst();
 
             if (proximo.isPresent()) {
                 Vertice adjacencia = proximo.get();
                 visitados.add(adjacencia);
                 percurso.append(adjacencia.getNome()).append(", ");
-                pilha.push(adjacencia); // avança para o primeiro vizinho não visitado
+                pilha.push(adjacencia);
             } else {
-                pilha.pop(); // vértice esgotado: remove da pilha
+                pilha.pop();
             }
         }
 
-        System.out.println(percurso);
+        if (verbose) {
+            System.out.println(percurso);
+        }
         return visitados.stream().map(Vertice::getNome).toList();
+    }
+
+    public int bfs(String origem, String destino) {
+        if (origem.equals(destino)) {
+            return 0;
+        }
+
+        Vertice verticeOrigem = encontraVertice(origem).orElseThrow(
+                () -> new IllegalArgumentException("Vertice " + origem + " não encontrado."));
+        Vertice verticeDestino = encontraVertice(destino).orElseThrow(
+                () -> new IllegalArgumentException("Vertice " + destino + " não encontrado."));
+
+        Map<Vertice, Integer> distancia = new HashMap<>();
+        Queue<Vertice> fila = new LinkedList<>();
+
+        distancia.put(verticeOrigem, 0);
+        fila.add(verticeOrigem);
+
+        while (!fila.isEmpty()) {
+            Vertice atual = fila.poll();
+            int passos = distancia.get(atual);
+
+            if (atual.equals(verticeDestino)) {
+                return passos;
+            }
+
+            for (Vertice vizinho : atual.getAdjacencias()) {
+                if (!distancia.containsKey(vizinho)) {
+                    distancia.put(vizinho, passos + 1);
+                    fila.add(vizinho);
+                }
+            }
+        }
+
+        return -1;
     }
 
     public List<String> dfsRecursivo(String origem, String destino, List<Vertice> visitados) {
